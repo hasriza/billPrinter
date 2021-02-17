@@ -44,6 +44,19 @@ const App = () => {
       },
     )
     .finally(async () => {
+      BluetoothManager.connect('00:01:90:85:0F:06') // the device address scanned.
+        .then(
+          (s) => {
+            return;
+          },
+          (e) => {
+            console.log(e);
+            Alert.alert(
+              'Connection Issue',
+              e + ' Please clear this application from recents.',
+            );
+          },
+        );
       if (headData !== [] && bodyData !== []) {
         await BluetoothEscposPrinter.printerAlign(
           BluetoothEscposPrinter.ALIGN.CENTER,
