@@ -1,5 +1,5 @@
 {
-  "name": "BillPrinter",
+  "name": "Bill Printer",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,7 +13,8 @@
     "axios": "^0.21.1",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-bluetooth-escpos-printer": "0.0.5"
+    "react-native-bluetooth-escpos-printer": "0.0.5",
+    "react-native-exit-app": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.12.16",

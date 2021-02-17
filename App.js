@@ -1,9 +1,10 @@
-import {Alert, BackHandler, Linking, Platform} from 'react-native';
+import {Alert, Linking, Platform} from 'react-native';
 import {
   BluetoothEscposPrinter,
   BluetoothManager,
 } from 'react-native-bluetooth-escpos-printer';
 
+import RNExitApp from 'react-native-exit-app';
 import React from 'react';
 
 const App = () => {
@@ -210,7 +211,7 @@ const App = () => {
           bodyData.map(
             async (i) =>
               await BluetoothEscposPrinter.printColumn(
-                [24, 5, 5, 8],
+                [24, 4, 4, 8],
                 [
                   BluetoothEscposPrinter.ALIGN.LEFT,
                   BluetoothEscposPrinter.ALIGN.CENTER,
@@ -279,7 +280,7 @@ const App = () => {
         }
         await BluetoothEscposPrinter.printText('\n\r\n\n\r', {}).then(
           () => {
-            BackHandler.exitApp();
+            RNExitApp.exitApp();
           },
           (err) => {
             Alert.alert(err);
@@ -289,6 +290,7 @@ const App = () => {
         await BluetoothEscposPrinter.printerAlign(
           BluetoothEscposPrinter.ALIGN.CENTER,
         );
+        Alert.alert('Error!', 'Data not received!');
         await BluetoothEscposPrinter.setBlob(0);
         await BluetoothEscposPrinter.printText('Bill Details not sent.\n\r', {
           encoding: 'GBK',
@@ -299,6 +301,10 @@ const App = () => {
         });
       }
     });
+  headData = [];
+  bodyData = [];
+  billType = '';
+
   return null;
 };
 
