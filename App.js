@@ -44,20 +44,7 @@ const App = () => {
       },
     )
     .finally(async () => {
-      BluetoothManager.connect('00:01:90:85:0F:06') // the device address scanned.
-        .then(
-          (s) => {
-            return;
-          },
-          (e) => {
-            console.log(e);
-            Alert.alert(
-              'Connection Issue',
-              e + ' Please clear this application from recents.',
-            );
-          },
-        );
-      if (headData !== [] && bodyData !== []) {
+      if (headData.length > 0 && bodyData.length > 0) {
         await BluetoothEscposPrinter.printerAlign(
           BluetoothEscposPrinter.ALIGN.CENTER,
         );
@@ -242,8 +229,38 @@ const App = () => {
           '--------------------------------\n\r',
           {},
         );
-        let footerColumnWidths = [14, 8, 8, 12];
+        let footerColumnWidths = [16, 7, 7, 12];
         if (billType === 'bill') {
+          if (headData[0].discount !== 0) {
+            await BluetoothEscposPrinter.printColumn(
+              footerColumnWidths,
+              [
+                BluetoothEscposPrinter.ALIGN.LEFT,
+                BluetoothEscposPrinter.ALIGN.CENTER,
+                BluetoothEscposPrinter.ALIGN.CENTER,
+                BluetoothEscposPrinter.ALIGN.RIGHT,
+              ],
+              ['Gross Total  :', '', '', headData[0].total],
+              {
+                widthtimes: 0,
+                fonttype: 1,
+              },
+            );
+            await BluetoothEscposPrinter.printColumn(
+              footerColumnWidths,
+              [
+                BluetoothEscposPrinter.ALIGN.LEFT,
+                BluetoothEscposPrinter.ALIGN.CENTER,
+                BluetoothEscposPrinter.ALIGN.CENTER,
+                BluetoothEscposPrinter.ALIGN.RIGHT,
+              ],
+              ['Discount  :', '', '', headData[0].discount],
+              {
+                widthtimes: 0,
+                fonttype: 1,
+              },
+            );
+          }
           await BluetoothEscposPrinter.printColumn(
             footerColumnWidths,
             [
@@ -303,7 +320,6 @@ const App = () => {
         await BluetoothEscposPrinter.printerAlign(
           BluetoothEscposPrinter.ALIGN.CENTER,
         );
-        Alert.alert('Error!', 'Data not received!');
         await BluetoothEscposPrinter.setBlob(0);
         await BluetoothEscposPrinter.printText('Bill Details not sent.\n\r', {
           encoding: 'GBK',
@@ -312,6 +328,16 @@ const App = () => {
           heigthtimes: 0,
           fonttype: 3,
         });
+
+        await BluetoothEscposPrinter.printText('\n\r', {});
+
+        await BluetoothEscposPrinter.printText('\n\r', {});
+        Alert.alert(
+          'Connection Issue',
+          'Data not received',
+          [{text: 'OK', onPress: () => RNExitApp.exitApp()}],
+          {cancelable: false},
+        );
       }
     });
   headData = [];
